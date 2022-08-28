@@ -1,0 +1,19 @@
+{
+  "name": "nodejs-express-first-api",
+  "version": "1.0.0",
+  "description": "A node.js API using express.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaFreitasNog/nodejs-express-first-api.git"
+  },
+  "author": "Raphael Freitas Nogueira de Souza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RafaFreitasNog/nodejs-express-first-api/issues"
+  },
+  "homepage": "https://github.com/RafaFreitasNog/nodejs-express-first-api#readme"
+}
