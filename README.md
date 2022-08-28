@@ -9,6 +9,11 @@ GET at /students will return you the list of students.
 
 POST at /students will post a new student in the end of the list
 
-PUT at /students/<number> will change the name of the student in the array position informed in "number"
+PUT at /students/number will change the name of the student in the array position informed in "number"
 
-DELETE at /students/<number> will delete the student in the array position informed in "number"
+DELETE at /students/number will delete the student in the array position informed in "number"
+
+Always send your requests in the JSON format, with the name value infomed as so:
+{
+    "name": "Robert Plant"
+}
