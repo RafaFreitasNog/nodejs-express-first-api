@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/studentsR', (req, res) => {
+router.get('/', (req, res) => {
     console.log('Olá')
-    res.send('Olá tb')
+    res.send('Articles')
 })
 
 module.exports = router; 

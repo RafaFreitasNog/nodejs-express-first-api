@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const studentsRouter = require('./src/routes/students')
+const studentsRouter = require('./src/routes/articles')
 require('./config/database')
 
 app.listen('3000')
@@ -12,7 +12,7 @@ let students = []
 app.use(express.json())
 
 // uses the routers
-app.use(studentsRouter)
+app.use('/articles', studentsRouter)
 
 // GET routes
 app.route('/').get((req, res) => {
