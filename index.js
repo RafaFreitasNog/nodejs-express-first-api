@@ -6,8 +6,7 @@ require('./config/database')
 app.listen('3000')
 
 // midlewares
-// transforms everything into JSON format
+    // transforms everything into JSON format
 app.use(express.json())
-
-// uses the routers
+    // uses the routers
 app.use('/articles', studentsRouter)
