@@ -2,10 +2,10 @@
   "name": "nodejs-express-first-api",
   "version": "1.0.0",
   "description": "A node.js API using express.",
-  "main": "./src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./src/index.js localhost 3000"
+    "start": "nodemon index.js localhost 3000"
   },
   "repository": {
     "type": "git",
