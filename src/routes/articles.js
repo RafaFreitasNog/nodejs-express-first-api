@@ -39,4 +39,28 @@ router.post('/', async (req, res) => {
     }
 })
 
+
+
+// PUT Routes
+router.put('/:id', async (req, res) => {
+    try {
+        let article = await Articles.findByIdAndUpdate(req.params.id, req.body, {new: true})
+        res.send(article)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+
+
+// DELETE Routes
+router.delete('/:id', async (req, res) => {
+    try {
+        let article = await Articles.findByIdAndRemove(req.params.id)
+        res.send(article)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
 module.exports = router; 
