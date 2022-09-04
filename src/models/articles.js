@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const articleSchema = mongoose.Schema({
     author: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Columnist',
         required: true
     },
     title: {
@@ -16,6 +17,14 @@ const articleSchema = mongoose.Schema({
     text: {
         type: String,
         required: true
+    }, 
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
+    updated_at: {
+        type: Date,
+        default: Date.now
     }
 })
 
