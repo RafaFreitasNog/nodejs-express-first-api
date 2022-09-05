@@ -5,11 +5,62 @@ const router = express.Router();
 const Columnists = require('../models/columnists')
 
 
-// POST Routes
-router.post('/', async (req, res) => {
+
+// GET Routes
+    // GET All
+router.get('/', async (req, res) => {
     try {
-        const {name, email, password} = req.body;
-        const columnist = await Columnists.create({name, email, password})
+        let columnists = await Columnists.find({})
+        res.status(200).send(columnists)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+    // GET by id
+router.get('/:id', async (req, res) => {
+    try {
+        let { id } = req.params
+        let columnist = await Columnists.findById(id)
+        res.send(columnist)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+
+
+// PUT Routes
+router.put('/:id', async (req, res) => {
+    try {
+        let { id } = req.params
+        let columnist = await Columnists.findByIdAndUpdate(id, req.body, {new: true})
+        res.send(columnist)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+
+
+// DELETE Routes
+router.delete('/:id', async (req, res) => {
+    try {
+        let { id } = req.params
+        let columnist = await Columnists.findByIdAndRemove(id)
+        res.send(columnist)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+
+
+// POST Routes
+router.post('/register', async (req, res) => {
+    try {
+        let {name, email, password} = req.body;
+        let columnist = await Columnists.create({name, email, password})
         res.status(200).send(columnist)
     } catch (error) {
         res.status(500).json({error: "Error creating new columnist"})
