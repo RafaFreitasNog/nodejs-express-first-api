@@ -37,7 +37,6 @@ router.put('/:id', async (req, res) => {
         let {name, email, password} = req.body;
         let columnist = await Columnists.findById(id)
         Object.assign(columnist, req.body)
-        columnist.updated_at = Date.now()
         await columnist.save()
         res.send(columnist)
     } catch (error) {
