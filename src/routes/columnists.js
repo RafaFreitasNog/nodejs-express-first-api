@@ -60,7 +60,7 @@ router.delete('/:id', async (req, res) => {
 
 
 // POST Routes
-router.post('/', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         let {name, email, password} = req.body;
         let columnist = await Columnists.create({name, email, password})
