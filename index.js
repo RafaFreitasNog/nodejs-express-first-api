@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-const studentsRouter = require('./src/routes/articles')
+const articlesRouter = require('./src/routes/articles')
+const columnistsRouter = require('./src/routes/columnists')
 require('./config/database')
 
 app.listen('3000')
@@ -9,4 +10,5 @@ app.listen('3000')
     // transforms everything into JSON format
 app.use(express.json())
     // uses the routers
-app.use('/articles', studentsRouter)
+app.use('/articles', articlesRouter)
+app.use('/columnists', columnistsRouter)

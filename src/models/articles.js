@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const articleSchema = mongoose.Schema({
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Columnist',
-        required: true
+        ref: 'Columnist'
     },
     title: {
         type: String,
