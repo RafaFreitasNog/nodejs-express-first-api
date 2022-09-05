@@ -6,7 +6,7 @@ const Articles = require('../models/articles')
 
 // GET Routes
 
-    // GET all
+// GET all
 router.get('/', async (req, res) => {
     try {
         let articles = await Articles.find({})
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-    // GET by id
+// GET by id
 router.get('/:id', async (req, res) => {
     try {
         let article = await Articles.findById(req.params.id)

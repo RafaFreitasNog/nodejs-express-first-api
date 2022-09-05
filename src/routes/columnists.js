@@ -7,7 +7,7 @@ const Columnists = require('../models/columnists')
 
 
 // GET Routes
-    // GET All
+// GET All
 router.get('/', async (req, res) => {
     try {
         let columnists = await Columnists.find({})
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-    // GET by id
+// GET by id
 router.get('/:id', async (req, res) => {
     try {
         let { id } = req.params
@@ -34,7 +34,11 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         let { id } = req.params
-        let columnist = await Columnists.findByIdAndUpdate(id, req.body, {new: true})
+        let {name, email, password} = req.body;
+        let columnist = await Columnists.findById(id)
+        Object.assign(columnist, req.body)
+        columnist.updated_at = Date.now()
+        await columnist.save()
         res.send(columnist)
     } catch (error) {
         res.status(400).send(error)
@@ -57,7 +61,7 @@ router.delete('/:id', async (req, res) => {
 
 
 // POST Routes
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         let {name, email, password} = req.body;
         let columnist = await Columnists.create({name, email, password})

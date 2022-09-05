@@ -8,7 +8,8 @@ const userSchema = mongoose.Schema ({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -16,16 +17,15 @@ const userSchema = mongoose.Schema ({
     },
     created_at: {
         type: Date,
-        default: Date.now
+        default: () => Date.now()
     },
     updated_at: {
         type: Date,
-        default: Date.now
+        default: () => Date.now()
     },
     favorites: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Columnist',
-        required: true
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Columnist'
     }]
 
 })

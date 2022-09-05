@@ -9,7 +9,8 @@ const columnistsSchema = mongoose.Schema ({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -17,17 +18,18 @@ const columnistsSchema = mongoose.Schema ({
     },
     created_at: {
         type: Date,
-        default: Date.now
+        immutable: true,
+        default: () => Date.now()
     },
     updated_at: {
         type: Date,
-        default: Date.now
+        default: () => Date.now()
     }
 })
 
 // Encrypt password
 columnistsSchema.pre('save', async function (next) {
-    if (this.isNew || this.isModified('password ')) {
+    if (this.isNew || this.isModified('password')) {
         try {
             const hash = await bcrypt.hash(this.password, 10)
             this.password = hash
