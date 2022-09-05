@@ -29,7 +29,7 @@ const articleSchema = mongoose.Schema({
 })
 
 // Updates the updated_at field 
-columnistsSchema.pre('save', async function (next) {
+articleSchema.pre('save', async function (next) {
     this.updated_at = Date.now()
     next()
 })
