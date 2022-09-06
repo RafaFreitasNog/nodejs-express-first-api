@@ -30,4 +30,23 @@ const userSchema = mongoose.Schema ({
 
 })
 
-module.esports = mongoose.model('User', userSchema)
+// Encrypt password
+userSchema.pre('save', async function (next) {
+    if (this.isNew || this.isModified('password')) {
+        try {
+            const hash = await bcrypt.hash(this.password, 10)
+            this.password = hash
+            next()
+        } catch (error) {
+            next(error)
+        }
+    }
+})
+
+// Updates the updated_at field 
+userSchema.pre('save', async function (next) {
+    this.updated_at = Date.now()
+    next()
+})
+
+module.exports = mongoose.model('User', userSchema)
