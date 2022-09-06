@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const userSchema = mongoose.Schema ({
     name: {
@@ -25,7 +26,7 @@ const userSchema = mongoose.Schema ({
     },
     favorites: [{
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Columnist'
+        ref: 'Articles'
     }]
 
 })
