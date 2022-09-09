@@ -4,9 +4,8 @@ const secret = process.env.JWT_TOKEN;
 const jwt = require('jsonwebtoken');
 
 const Columnists = require('../models/columnists')
-const Users = require('../models/users')
 
-const isAuth = async (req, res, next) => {
+const isColumnist = async (req, res, next) => {
     const token = req.headers['auth-token']
 
     if (!token) {
@@ -18,16 +17,16 @@ const isAuth = async (req, res, next) => {
             } else {
                 req.email = decoded.email
                 const findColumnist = await Columnists.findOne({ email: decoded.email })
-                const findUser = await Users.findOne({ email: decoded.email })
                 console.log(findColumnist)
-                if (findColumnist || findUser) {
+                if (findColumnist) {
+                    req.columnist = findColumnist
                     next()
                 } else {
-                    res.status(401).send({error: `Unauthorized: You don't have permission`})
+                    res.status(401).send({error: `Unauthorized: You don't have this permission`})
                 }
             }
         })
     }
 }
 
-module.exports = isAuth
+module.exports = isColumnist

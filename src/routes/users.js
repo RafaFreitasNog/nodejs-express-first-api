@@ -38,10 +38,11 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         let { id } = req.params
-        let {name, email, password} = req.body;
+        // let {name, email, password} = req.body;
         let user = await Users.findById(id)
         Object.assign(user, req.body)
         await user.save()
+        user.password = undefined
         res.send(user)
     } catch (error) {
         res.status(400).send(error)
@@ -71,14 +72,14 @@ router.post('/register', async (req, res) => {
         let user = await Users.create({name, email, password})
         res.status(200).send(user)
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({error: "error crating new user"})
     }
 })
 
 // Login
 router.post('/login', async (req, res) => {
     let { email, password } = req.body
-    const user = await Users.findOne({email})
+    const user = await Users.findOne({email}).select('+password')
     try {
         if (!user) {
             return res.status(400).send({error: "User not found"})

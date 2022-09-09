@@ -5,8 +5,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.JWT_TOKEN;
 
-
-// IMporting model Schema
+// Importing model Schema
 const Columnists = require('../models/columnists')
 
 
@@ -43,6 +42,7 @@ router.put('/:id', async (req, res) => {
         let columnist = await Columnists.findById(id)
         Object.assign(columnist, req.body)
         await columnist.save()
+        columnist.password = undefined
         res.send(columnist)
     } catch (error) {
         res.status(400).send(error)
@@ -79,7 +79,7 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
     let { email, password } = req.body
-    const columnist = await Columnists.findOne({email})
+    const columnist = await Columnists.findOne({email}).select('+password')
     try {
         if (!columnist) {
             return res.status(400).send({error: "User not found"})
