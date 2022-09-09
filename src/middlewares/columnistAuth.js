@@ -17,7 +17,6 @@ const isColumnist = async (req, res, next) => {
             } else {
                 req.email = decoded.email
                 const findColumnist = await Columnists.findOne({ email: decoded.email })
-                console.log(findColumnist)
                 if (findColumnist) {
                     req.columnist = findColumnist
                     next()
