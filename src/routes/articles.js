@@ -1,13 +1,15 @@
 const express = require('express')
 const router = express.Router()
 
+const isAuth = require('../middlewares/auth')
+
 // Importing model schema
 const Articles = require('../models/articles')
 
 // GET Routes
 
 // GET all
-router.get('/', async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
     try {
         let articles = await Articles.find({})
         res.send(articles)
