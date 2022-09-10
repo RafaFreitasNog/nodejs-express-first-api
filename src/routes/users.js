@@ -7,6 +7,7 @@ const secret = process.env.JWT_TOKEN;
 
 // IMporting model Schema
 const Users = require('../models/users')
+const Columnists = require('../models/columnists')
 
 
 
@@ -68,10 +69,15 @@ router.delete('/:id', async (req, res) => {
 // REGISTER
 router.post('/register', async (req, res) => {
     try {
-        let {name, email, password} = req.body;
-        let user = await Users.create({name, email, password})
-        user.password = undefined
-        res.status(200).send(user)
+        const {name, email, password} = req.body;
+        const isThere = await isEmailAlreadyUsed(email)
+        if (isThere) {
+            res.status(401).json({error: "Error creating new user, email already in use"})
+        } else {            
+            const user = await Users.create({name, email, password})
+            user.password = undefined
+            res.status(200).send(user)
+        }
     } catch (error) {
         res.status(500).json({error: "error crating new user"})
     }
@@ -103,5 +109,15 @@ router.post('/login', async (req, res) => {
         res.status(500).send(error)
     }
 })
+
+const isEmailAlreadyUsed = async (email) => {
+    const isThereColumnist = await Columnists.findOne({email: email})
+    const isThereUser = await Users.findOne({email: email})
+    if (!isThereColumnist && !isThereUser) {
+        return false
+    } else {
+        return true
+    }
+}
 
 module.exports = router
