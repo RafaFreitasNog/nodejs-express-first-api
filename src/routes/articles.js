@@ -8,7 +8,6 @@ const isAuth = require('../middlewares/auth')
 
 // Importing model schema
 const Articles = require('../models/articles')
-const { findById } = require('../models/articles')
 
 // GET Routes
 
@@ -28,6 +27,17 @@ router.get('/:id', isAuth, async (req, res) => {
     try {
         let article = await Articles.findById(req.params.id)
         res.send(article)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+// GET by Columnist
+router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
+    try {
+        const { columnistid } = req.params
+        let articles = await Articles.find({author: columnistid})
+        res.send(articles)
     } catch (error) {
         res.status(400).send(error)
     }
