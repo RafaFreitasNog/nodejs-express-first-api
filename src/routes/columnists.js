@@ -5,8 +5,15 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.JWT_TOKEN;
 
+// Authentication middlewares
+const isColumnist = require('../middlewares/columnistAuth')
+const isUser = require('../middlewares/userAuth')
+const isAuth = require('../middlewares/auth')
+
+
 // Importing model Schema
 const Columnists = require('../models/columnists')
+const Users = require('../models/users')
 
 
 
@@ -68,9 +75,14 @@ router.delete('/:id', async (req, res) => {
 // Register
 router.post('/register', async (req, res) => {
     try {
-        let {name, email, password} = req.body;
-        let columnist = await Columnists.create({name, email, password})
-        res.status(200).send(columnist)
+        const {name, email, password} = req.body;
+        const isThere = await isEmailAlreadyUsed(email)
+        if (isThere) {
+            res.status(401).json({error: "Error creating new columnist, email already in use"})
+        } else {
+            const columnist = await Columnists.create({name, email, password})
+            res.status(200).send(columnist)
+        }
     } catch (error) {
         res.status(500).json({error: "Error creating new columnist"})
     }
@@ -102,5 +114,15 @@ router.post('/login', async (req, res) => {
         res.status(500).send(error)
     }
 })
+
+const isEmailAlreadyUsed = async (email) => {
+    const isThereColumnist = await Columnists.findOne({email: email})
+    const isThereUser = await Users.findOne({email: email})
+    if (!isThereColumnist && !isThereUser) {
+        return false
+    } else {
+        return true
+    }
+}
 
 module.exports = router

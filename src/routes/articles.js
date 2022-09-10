@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-// const isAuth = require('../middlewares/auth')
+// Authentication middlewares
 const isColumnist = require('../middlewares/columnistAuth')
 const isUser = require('../middlewares/userAuth')
 const isAuth = require('../middlewares/auth')
