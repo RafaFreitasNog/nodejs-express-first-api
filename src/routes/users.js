@@ -70,6 +70,7 @@ router.post('/register', async (req, res) => {
     try {
         let {name, email, password} = req.body;
         let user = await Users.create({name, email, password})
+        user.password = undefined
         res.status(200).send(user)
     } catch (error) {
         res.status(500).json({error: "error crating new user"})

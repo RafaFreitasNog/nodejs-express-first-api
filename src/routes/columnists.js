@@ -81,6 +81,7 @@ router.post('/register', async (req, res) => {
             res.status(401).json({error: "Error creating new columnist, email already in use"})
         } else {
             const columnist = await Columnists.create({name, email, password})
+            columnist.password = undefined
             res.status(200).send(columnist)
         }
     } catch (error) {
