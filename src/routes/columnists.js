@@ -10,7 +10,6 @@ const isColumnist = require('../middlewares/columnistAuth')
 const isUser = require('../middlewares/userAuth')
 const isAuth = require('../middlewares/auth')
 
-
 // Importing model Schema
 const Columnists = require('../models/columnists')
 const Users = require('../models/users')

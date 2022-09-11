@@ -5,7 +5,12 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const secret = process.env.JWT_TOKEN;
 
-// IMporting model Schema
+// Authentication middlewares
+const isColumnist = require('../middlewares/columnistAuth')
+const isUser = require('../middlewares/userAuth')
+const isAuth = require('../middlewares/auth')
+
+// Importing model Schema
 const Users = require('../models/users')
 const Columnists = require('../models/columnists')
 
@@ -13,7 +18,7 @@ const Columnists = require('../models/columnists')
 
 // GET Routes
 // GET All
-router.get('/', async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
     try {
         let users = await Users.find({})
         res.status(200).send(users)
@@ -23,7 +28,7 @@ router.get('/', async (req, res) => {
 })
 
 // GET by id
-router.get('/:id', async (req, res) => {
+router.get('/:id', isAuth, async (req, res) => {
     try {
         let { id } = req.params
         let user = await Users.findById(id)
@@ -36,15 +41,20 @@ router.get('/:id', async (req, res) => {
 
 
 // PUT Routes
-router.put('/:id', async (req, res) => {
+router.put('/:id', isUser, async (req, res) => {
     try {
         let { id } = req.params
-        // let {name, email, password} = req.body;
+        let {name, email, password} = req.body;
         let user = await Users.findById(id)
-        Object.assign(user, req.body)
-        await user.save()
-        user.password = undefined
-        res.send(user)
+        const checkIfSelf = await isSelf(req.user, user)
+        if (checkIfSelf) {
+            Object.assign(user, req.body)
+            await user.save()
+            user.password = undefined
+            res.send(user)
+        } else {
+            res.status(401).send({error: `Permission denied, not your account`})
+        }
     } catch (error) {
         res.status(400).send(error)
     }
@@ -53,11 +63,17 @@ router.put('/:id', async (req, res) => {
 
 
 // DELETE Routes
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isUser, async (req, res) => {
     try {
         let { id } = req.params
-        let user = await Users.findByIdAndRemove(id)
-        res.send(user)
+        let findUser = await Users.findById(id)
+        const checkIfSelf = await isSelf(req.user, findUser)
+        if (checkIfSelf) {
+            let removedUser = await Users.findByIdAndRemove(id)
+            res.send(removedUser)
+        } else {
+            res.status(401).send({error: `Permission denied, not your account`})
+        }
     } catch (error) {
         res.status(400).send(error)
     }
@@ -117,6 +133,14 @@ const isEmailAlreadyUsed = async (email) => {
         return false
     } else {
         return true
+    }
+}
+
+const isSelf = async (userWhoRequested, userToUpdate) => {
+    if (JSON.stringify(userWhoRequested._id) == JSON.stringify(userToUpdate._id)) {
+        return true
+    } else {
+        return false
     }
 }
 
