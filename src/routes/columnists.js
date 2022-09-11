@@ -19,7 +19,7 @@ const Users = require('../models/users')
 
 // GET Routes
 // GET All
-router.get('/', async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
     try {
         let columnists = await Columnists.find({})
         res.status(200).send(columnists)
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 })
 
 // GET by id
-router.get('/:id', async (req, res) => {
+router.get('/:id', isAuth, async (req, res) => {
     try {
         let { id } = req.params
         let columnist = await Columnists.findById(id)
@@ -42,15 +42,20 @@ router.get('/:id', async (req, res) => {
 
 
 // PUT Routes
-router.put('/:id', async (req, res) => {
+router.put('/:id', isColumnist, async (req, res) => {
     try {
         let { id } = req.params
         let {name, email, password} = req.body;
         let columnist = await Columnists.findById(id)
-        Object.assign(columnist, req.body)
-        await columnist.save()
-        columnist.password = undefined
-        res.send(columnist)
+        const checkIfSelf = await isSelf(req.columnist, columnist)
+        if (checkIfSelf) {            
+            Object.assign(columnist, req.body)
+            await columnist.save()
+            columnist.password = undefined
+            res.send(columnist)
+        } else {
+            res.status(401).send({error: `Permission denied, not your account`})
+        }
     } catch (error) {
         res.status(400).send(error)
     }
@@ -59,11 +64,17 @@ router.put('/:id', async (req, res) => {
 
 
 // DELETE Routes
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isColumnist, async (req, res) => {
     try {
         let { id } = req.params
-        let columnist = await Columnists.findByIdAndRemove(id)
-        res.send(columnist)
+        let findColumnist = await Columnists.findById(id)
+        const checkIfSelf = await isSelf(req.columnist, findColumnist)
+        if (checkIfSelf) {            
+            let removedColumnist = await Columnists.findByIdAndRemove(id)
+            res.send(removedColumnist)
+        } else {
+            res.status(401).send({error: `Permission denied, not your account`})
+        }
     } catch (error) {
         res.status(400).send(error)
     }
@@ -92,7 +103,7 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
     let { email, password } = req.body
-    const columnist = await Columnists.findOne({email}).select('+password')
+    let columnist = await Columnists.findOne({email}).select('+password')
     try {
         if (!columnist) {
             return res.status(400).send({error: "User not found"})
@@ -106,7 +117,6 @@ router.post('/login', async (req, res) => {
         
         if (same) {
             const token = jwt.sign({ email }, secret, {expiresIn: '10d'})
-
             columnist.password = undefined
             res.send({ columnist, token })
         }
@@ -123,6 +133,14 @@ const isEmailAlreadyUsed = async (email) => {
         return false
     } else {
         return true
+    }
+}
+
+const isSelf = async (columnistWhoRequested, columnistToUpdate) => {
+    if (JSON.stringify(columnistWhoRequested._id) == JSON.stringify(columnistToUpdate._id)) {
+        return true
+    } else {
+        return false
     }
 }
 

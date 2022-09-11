@@ -15,7 +15,6 @@ const Articles = require('../models/articles')
 router.get('/', isAuth, async (req, res) => {
     try {
         let articles = await Articles.find({})
-        console.log(req.user)
         res.send(articles)
     } catch (error) {
         res.status(400).send(error)
@@ -35,7 +34,7 @@ router.get('/:id', isAuth, async (req, res) => {
 // GET by Columnist
 router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
     try {
-        const { columnistid } = req.params
+        let { columnistid } = req.params
         let articles = await Articles.find({author: columnistid})
         res.send(articles)
     } catch (error) {
@@ -48,8 +47,8 @@ router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
 // POST Routes
 router.post('/', isColumnist, async (req, res) => {
     try {
-        const { title, subtitle, text } = req.body
-        const columnist = req.columnist
+        let { title, subtitle, text } = req.body
+        let columnist = req.columnist
         let article = await Articles.create({
             author: columnist._id,
             title: title,
@@ -68,7 +67,7 @@ router.post('/', isColumnist, async (req, res) => {
 // PUT Routes
 router.put('/:id', isColumnist, async (req, res) => {
     try {
-        const { id } = req.params
+        let { id } = req.params
         let article = await Articles.findById(id)
         if (isOwner(req.columnist, article)) {            
             Object.assign(article, req.body)
