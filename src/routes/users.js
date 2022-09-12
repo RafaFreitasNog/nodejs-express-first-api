@@ -13,6 +13,7 @@ const isAuth = require('../middlewares/auth')
 // Importing model Schema
 const Users = require('../models/users')
 const Columnists = require('../models/columnists')
+const Articles = require('../models/articles')
 
 
 
@@ -41,6 +42,7 @@ router.get('/:id', isAuth, async (req, res) => {
 
 
 // PUT Routes
+// Edit Personal Info
 router.put('/:id', isUser, async (req, res) => {
     try {
         let { id } = req.params
@@ -56,10 +58,63 @@ router.put('/:id', isUser, async (req, res) => {
             res.status(401).send({error: `Permission denied, not your account`})
         }
     } catch (error) {
-        res.status(400).send(error)
+        res.status(500).send(error)
     }
 })
 
+// Add Article to Favorites
+router.put('/favorites/add/:id', isUser, async (req, res) => {
+    try {
+        let { id } = req.params
+        let { favorites } = req.user
+        const checkIfItsAlreadyFavorite = await favorites.includes(id)
+        if (checkIfItsAlreadyFavorite) {
+            res.status(400).send({error: 'already in your favorites'})
+        } else {
+            const checkIfArticleExists = await Articles.findById(id)
+            if (checkIfArticleExists) {
+                const updatedUser = await Users.findByIdAndUpdate(req.user._id, {
+                    $push: {
+                        favorites: id,
+                    }
+                }, { new: true })
+                res.status(200).send(updatedUser)
+            } else {
+                res.status(404).send({error: `No article matches the id value provided`})
+            }
+        }
+    } catch (error) {
+        res.status(404).send({error: `No article matches the id value provided`})
+    }
+})
+
+// Remove Articles from Favorites
+router.put('/favorites/remove/:id', isUser, async (req, res) => {
+    try {
+        let { id } = req.params
+        let { favorites } = req.user
+        const checkIfArticleExists = await Articles.findById(id)
+        await Articles.find()
+        if (checkIfArticleExists) {
+            const checkIfItsFavorite = await favorites.includes(id)
+            if (checkIfItsFavorite) {
+                const updatedUser = await Users.findByIdAndUpdate(req.user._id, {
+                    $pull: {
+                        favorites: id,
+                    }
+                }, { new: true })
+                res.status(200).send(updatedUser)
+            } else {
+                res.status(404).send({error: `The article is not in your favorites`})
+            }
+        } else {
+            res.status(404).send({error: `No article matches the id value provided`})
+        }
+
+    } catch (error) {
+        res.status(404).send({error: `No article matches the id value provided`})
+    }
+})
 
 
 // DELETE Routes
