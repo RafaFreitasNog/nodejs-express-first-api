@@ -13,6 +13,7 @@ const isAuth = require('../middlewares/auth')
 // Importing model Schema
 const Columnists = require('../models/columnists')
 const Users = require('../models/users')
+const Articles = require('../models/articles')
 
 
 
@@ -70,7 +71,9 @@ router.delete('/:id', isColumnist, async (req, res) => {
         const checkIfSelf = await isSelf(req.columnist, findColumnist)
         if (checkIfSelf) {            
             let removedColumnist = await Columnists.findByIdAndRemove(id)
-            res.send(removedColumnist)
+            let removedArticles = await Articles.deleteMany({author: id})
+            // update Users favorites list
+            res.send({removedColumnist, removedArticles})
         } else {
             res.status(401).send({error: `Permission denied, not your account`})
         }
