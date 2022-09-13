@@ -11,7 +11,7 @@ const Articles = require('../models/articles')
 
 // GET Routes
 
-// GET all
+// GET All
 router.get('/', isAuth, async (req, res) => {
     try {
         let articles = await Articles.find({})
@@ -21,7 +21,18 @@ router.get('/', isAuth, async (req, res) => {
     }
 })
 
-// GET by id
+// Search Articles
+router.get('/search', isAuth, async (req, res) => {
+    try {
+        let { query } = req.query
+        let matchedArticles = await Articles.find({ $text: { $search: query }})
+        res.status(200).send(matchedArticles)
+    } catch (error) {
+        res.status(400).send({error})
+    }
+})
+
+// GET by Id
 router.get('/:id', isAuth, async (req, res) => {
     try {
         let article = await Articles.findById(req.params.id)
