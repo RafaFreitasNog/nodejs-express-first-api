@@ -39,6 +39,17 @@ router.get('/:id', isAuth, async (req, res) => {
     }
 })
 
+// GET Favorites
+router.get('/favorites/list', isUser, async (req, res) => {
+    try {
+        let { favorites } = req.user
+        const favoriteArticles = await Articles.find({_id: { $in: favorites}})
+        res.status(200).send(favoriteArticles)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
 
 
 // PUT Routes
