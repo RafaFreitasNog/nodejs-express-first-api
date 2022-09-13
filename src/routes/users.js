@@ -28,6 +28,17 @@ router.get('/', isAuth, async (req, res) => {
     }
 })
 
+// GET Favorites
+router.get('/favorites', isUser, async (req, res) => {
+    try {
+        let { favorites } = req.user
+        const favoriteArticles = await Articles.find({_id: { $in: favorites}})
+        res.status(200).send(favoriteArticles)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
 // GET by id
 router.get('/:id', isAuth, async (req, res) => {
     try {
@@ -39,40 +50,9 @@ router.get('/:id', isAuth, async (req, res) => {
     }
 })
 
-// GET Favorites
-router.get('/favorites/list', isUser, async (req, res) => {
-    try {
-        let { favorites } = req.user
-        const favoriteArticles = await Articles.find({_id: { $in: favorites}})
-        res.status(200).send(favoriteArticles)
-    } catch (error) {
-        res.status(400).send(error)
-    }
-})
-
 
 
 // PUT Routes
-// Edit Personal Info
-router.put('/:id', isUser, async (req, res) => {
-    try {
-        let { id } = req.params
-        let {name, email, password} = req.body;
-        let user = await Users.findById(id)
-        const checkIfSelf = await isSelf(req.user, user)
-        if (checkIfSelf) {
-            Object.assign(user, req.body)
-            await user.save()
-            user.password = undefined
-            res.send(user)
-        } else {
-            res.status(401).send({error: `Permission denied, not your account`})
-        }
-    } catch (error) {
-        res.status(500).send(error)
-    }
-})
-
 // Add Article to Favorites
 router.put('/favorites/add/:id', isUser, async (req, res) => {
     try {
@@ -126,6 +106,27 @@ router.put('/favorites/remove/:id', isUser, async (req, res) => {
         res.status(404).send({error: `No article matches the id value provided`})
     }
 })
+
+// Edit Personal Info
+router.put('/:id', isUser, async (req, res) => {
+    try {
+        let { id } = req.params
+        let {name, email, password} = req.body;
+        let user = await Users.findById(id)
+        const checkIfSelf = await isSelf(req.user, user)
+        if (checkIfSelf) {
+            Object.assign(user, req.body)
+            await user.save()
+            user.password = undefined
+            res.send(user)
+        } else {
+            res.status(401).send({error: `Permission denied, not your account`})
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 
 
 // DELETE Routes
