@@ -6,7 +6,7 @@ const usersRouter = require('./src/routes/users')
 require('./config/database')
 const cors = require('cors')
 
-app.listen('3000')
+app.listen('3001')
 
 // midlewares
     // transforms everything into JSON format
