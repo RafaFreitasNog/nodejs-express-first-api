@@ -39,4 +39,6 @@ articleSchema.pre('save', async function (next) {
 // Creates a 'text' index with the title, subtitile and text fields
 articleSchema.index({'title': 'text', 'subtitle': 'text', 'text': 'text'});
 
+articleSchema.index({author: 1});
+
 module.exports = mongoose.model('Articles', articleSchema);
