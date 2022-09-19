@@ -162,7 +162,7 @@ router.post('/register', async (req, res) => {
             res.status(200).send(user)
         }
     } catch (error) {
-        res.status(500).json({error: "error crating new user"})
+        res.status(500).json({error: "Error crating new user"})
     }
 })
 
