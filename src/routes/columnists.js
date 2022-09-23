@@ -98,7 +98,7 @@ router.post('/register', async (req, res) => {
             res.status(200).send(columnist)
         }
     } catch (error) {
-        res.status(500).json({error: "Error creating new columnist"})
+        res.status(500).json({error: "Unexpected error creating new columnist"})
     }
 })
 
@@ -108,23 +108,23 @@ router.post('/login', async (req, res) => {
     let columnist = await Columnists.findOne({email}).select('+password')
     try {
         if (!columnist) {
-            return res.status(400).send({error: "User not found"})
+            return res.status(400).json({error: "No user found with this e-mail"})
         }
 
         const same = await bcrypt.compare(password, columnist.password)
 
         if (same == false) {
-            return res.status(400).send({error: "Incorrect password"})
+            return res.status(400).json({error: "Incorrect password"})
         }
         
         if (same) {
-            const token = jwt.sign({ email }, secret, {expiresIn: '10d'})
+            const token = jwt.sign({ email }, secret, {expiresIn: '1d'})
             columnist.password = undefined
             res.send({ columnist, token })
         }
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json({error: "Unexpected error"})
     }
 })
 

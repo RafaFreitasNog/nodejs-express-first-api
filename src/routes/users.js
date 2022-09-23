@@ -162,7 +162,7 @@ router.post('/register', async (req, res) => {
             res.status(200).send(user)
         }
     } catch (error) {
-        res.status(500).json({error: "Error crating new user"})
+        res.status(500).json({error: "Unexpected error creating new user"})
     }
 })
 
@@ -172,13 +172,13 @@ router.post('/login', async (req, res) => {
     const user = await Users.findOne({email}).select('+password')
     try {
         if (!user) {
-            return res.status(400).send({error: "User not found"})
+            return res.status(400).json({error: "No user found with this e-mail"})
         }
 
         const same = await bcrypt.compare(password, user.password)
 
         if (same == false) {
-            return res.status(400).send({error: "Incorrect password"})
+            return res.status(400).json({error: "Incorrect password"})
         }
         
         if (same) {
@@ -189,7 +189,7 @@ router.post('/login', async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json({error: "Unexpected error"})
     }
 })
 
