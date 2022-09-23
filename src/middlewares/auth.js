@@ -7,7 +7,7 @@ const Columnists = require('../models/columnists')
 const Users = require('../models/users')
 
 const isAuth = async (req, res, next) => {
-    const token = req.headers['auth-token']
+    const token = req.headers['authtoken']
 
     if (!token) {
         res.status(401).send({error: 'Unauthorized: no token provided'})

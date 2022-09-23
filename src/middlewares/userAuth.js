@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const Users = require('../models/users')
 
 const isUser = async (req, res, next) => {
-    const token = req.headers['auth-token']
+    const token = req.headers['authtoken']
 
     if (!token) {
         res.status(401).send({error: 'Unauthorized: no token provided'})
