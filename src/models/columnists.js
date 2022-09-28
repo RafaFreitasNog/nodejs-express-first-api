@@ -25,6 +25,11 @@ const columnistsSchema = mongoose.Schema ({
     updated_at: {
         type: Date,
         default: () => Date.now()
+    },
+    columnist: {
+        type: Boolean,
+        default: true,
+        immutable: true
     }
 })
 

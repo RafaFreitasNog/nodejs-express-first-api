@@ -18,7 +18,7 @@ const articleSchema = mongoose.Schema({
     text: {
         type: String,
         required: true
-    }, 
+    },
     created_at: {
         type: Date,
         immutable: true,

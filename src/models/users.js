@@ -19,6 +19,7 @@ const userSchema = mongoose.Schema ({
     },
     created_at: {
         type: Date,
+        immutable: true,
         default: () => Date.now()
     },
     updated_at: {
@@ -28,7 +29,12 @@ const userSchema = mongoose.Schema ({
     favorites: [{
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Articles'
-    }]
+    }],
+    columnist: {
+        type: Boolean,
+        default: false,
+        immutable: true
+    }
 
 })
 
