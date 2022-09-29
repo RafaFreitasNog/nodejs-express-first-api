@@ -8,6 +8,7 @@ const isAuth = require('../middlewares/auth')
 
 // Importing model schema
 const Articles = require('../models/articles')
+const { default: mongoose } = require('mongoose')
 
 // GET Routes
 
@@ -44,7 +45,20 @@ router.get('/search', isAuth, async (req, res) => {
 // GET by Id
 router.get('/:id', isAuth, async (req, res) => {
     try {
-        let article = await Articles.findById(req.params.id)
+        const id = req.params.id
+        let article = await Articles.aggregate([
+            {
+                $match: { _id: mongoose.Types.ObjectId(id) }
+            },
+            {
+                $lookup: {
+                    from: 'columnists',
+                    localField: 'author',
+                    foreignField: '_id',
+                    as: 'author'
+                }
+            }
+        ])
         res.send(article)
     } catch (error) {
         res.status(400).send(error)
