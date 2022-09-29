@@ -14,7 +14,16 @@ const Articles = require('../models/articles')
 // GET All
 router.get('/', isAuth, async (req, res) => {
     try {
-        let articles = await Articles.find({})
+        let articles = await Articles.aggregate([
+            {
+                $lookup: {
+                    from: 'columnists',
+                    localField: 'author',
+                    foreignField: '_id',
+                    as: 'author'
+                }
+            }
+        ])
         res.send(articles)
     } catch (error) {
         res.status(400).send(error)

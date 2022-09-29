@@ -5,12 +5,14 @@ const columnistsRouter = require('./src/routes/columnists')
 const usersRouter = require('./src/routes/users')
 require('./config/database')
 const cors = require('cors')
+const { urlencoded } = require('express')
 
 app.listen('3001')
 
 // midlewares
     // transforms everything into JSON format
 app.use(express.json());
+app.use(urlencoded({extended: true}))
 app.use(cors());
 
     // uses the routers
