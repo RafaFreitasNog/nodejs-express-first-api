@@ -89,7 +89,6 @@ router.post('/', isColumnist, async (req, res) => {
             subtitle: subtitle,
             text: text
         })
-        console.log(columnist._id)
         res.status(200).send({article, columnist})
     } catch (error) {
         res.status(400).send(error)
