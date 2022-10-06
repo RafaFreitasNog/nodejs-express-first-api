@@ -69,7 +69,19 @@ router.get('/:id', isAuth, async (req, res) => {
 router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
     try {
         let { columnistid } = req.params
-        let articles = await Articles.find({author: columnistid})
+        let articles = await Articles.aggregate([
+            {
+                $match: { author: mongoose.Types.ObjectId(columnistid) }
+            },
+            {
+                $lookup: {
+                    from: 'columnists',
+                    localField: 'author',
+                    foreignField: '_id',
+                    as: 'author'
+                }
+            }
+        ])
         res.send(articles)
     } catch (error) {
         res.status(400).send(error)
