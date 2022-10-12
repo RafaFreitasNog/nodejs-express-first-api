@@ -7,6 +7,11 @@ const articleSchema = mongoose.Schema({
         required: true,
         index: true
     },
+    categorie: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Categories',
+        index: true
+    },
     title: {
         type: String,
         required: true

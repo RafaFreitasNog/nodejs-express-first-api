@@ -3,6 +3,7 @@ const app = express()
 const articlesRouter = require('./src/routes/articles')
 const columnistsRouter = require('./src/routes/columnists')
 const usersRouter = require('./src/routes/users')
+const categoriesRouter = require('./src/routes/categories')
 require('./config/database')
 const cors = require('cors')
 const { urlencoded } = require('express')
@@ -19,3 +20,4 @@ app.use(cors());
 app.use('/articles', articlesRouter);
 app.use('/columnists', columnistsRouter);
 app.use('/users', usersRouter);
+app.use('/categories', categoriesRouter);

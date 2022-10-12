@@ -23,6 +23,14 @@ router.get('/', isAuth, async (req, res) => {
                     foreignField: '_id',
                     as: 'author'
                 }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'categorie',
+                    foreignField: '_id',
+                    as: 'categorie'
+                }
             }
         ])
         res.send(articles)
@@ -57,6 +65,14 @@ router.get('/:id', isAuth, async (req, res) => {
                     foreignField: '_id',
                     as: 'author'
                 }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'categorie',
+                    foreignField: '_id',
+                    as: 'categorie'
+                }
             }
         ])
         res.send(article)
@@ -80,6 +96,14 @@ router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
                     foreignField: '_id',
                     as: 'author'
                 }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'categorie',
+                    foreignField: '_id',
+                    as: 'categorie'
+                }
             }
         ])
         res.send(articles)
@@ -93,13 +117,14 @@ router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
 // POST Routes
 router.post('/', isColumnist, async (req, res) => {
     try {
-        let { title, subtitle, text } = req.body
+        let { title, subtitle, text, categorie } = req.body
         let columnist = req.columnist
         let article = await Articles.create({
             author: columnist._id,
             title: title,
             subtitle: subtitle,
-            text: text
+            text: text,
+            categorie: categorie
         })
         res.status(200).send({article, columnist})
     } catch (error) {

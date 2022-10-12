@@ -193,6 +193,11 @@ router.post('/login', async (req, res) => {
     }
 })
 
+// revalidate
+router.post('/revalidate', isUser, async (req, res) => {
+    res.status(200).json({message: "ok"});
+})
+
 const isEmailAlreadyUsed = async (email) => {
     const isThereColumnist = await Columnists.findOne({email: email})
     const isThereUser = await Users.findOne({email: email})
