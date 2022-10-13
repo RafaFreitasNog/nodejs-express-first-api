@@ -112,6 +112,37 @@ router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
     }
 })
 
+// GET by Columnist
+router.get('/category/:categoryid', isAuth, async (req, res) => {
+    try {
+        let { categoryid } = req.params
+        let articles = await Articles.aggregate([
+            {
+                $match: { category: mongoose.Types.ObjectId(categoryid) }
+            },
+            {
+                $lookup: {
+                    from: 'columnists',
+                    localField: 'author',
+                    foreignField: '_id',
+                    as: 'author'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'category',
+                    foreignField: '_id',
+                    as: 'category'
+                }
+            }
+        ])
+        res.send(articles)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
 
 
 // POST Routes
