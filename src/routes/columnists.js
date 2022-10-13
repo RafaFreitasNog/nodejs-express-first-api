@@ -130,7 +130,7 @@ router.post('/login', async (req, res) => {
 
 // revalidate
 router.post('/revalidate', isColumnist, async (req, res) => {
-    res.status(200).json({message: "ok"});
+    res.status(200).json(req.columnist);
 })
 
 const isEmailAlreadyUsed = async (email) => {
