@@ -7,7 +7,7 @@ const articleSchema = mongoose.Schema({
         required: true,
         index: true
     },
-    categorie: {
+    category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Categories',
         index: true

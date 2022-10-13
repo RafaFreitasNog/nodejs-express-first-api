@@ -27,9 +27,9 @@ router.get('/', isAuth, async (req, res) => {
             {
                 $lookup: {
                     from: 'categories',
-                    localField: 'categorie',
+                    localField: 'category',
                     foreignField: '_id',
-                    as: 'categorie'
+                    as: 'category'
                 }
             }
         ])
@@ -69,9 +69,9 @@ router.get('/:id', isAuth, async (req, res) => {
             {
                 $lookup: {
                     from: 'categories',
-                    localField: 'categorie',
+                    localField: 'category',
                     foreignField: '_id',
-                    as: 'categorie'
+                    as: 'category'
                 }
             }
         ])
@@ -100,9 +100,9 @@ router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
             {
                 $lookup: {
                     from: 'categories',
-                    localField: 'categorie',
+                    localField: 'category',
                     foreignField: '_id',
-                    as: 'categorie'
+                    as: 'category'
                 }
             }
         ])
@@ -117,14 +117,14 @@ router.get('/writtenby/:columnistid', isAuth, async (req, res) => {
 // POST Routes
 router.post('/', isColumnist, async (req, res) => {
     try {
-        let { title, subtitle, text, categorie } = req.body
+        let { title, subtitle, text, category } = req.body
         let columnist = req.columnist
         let article = await Articles.create({
             author: columnist._id,
             title: title,
             subtitle: subtitle,
             text: text,
-            categorie: categorie
+            category: category
         })
         res.status(200).send({article, columnist})
     } catch (error) {

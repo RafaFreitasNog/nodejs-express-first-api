@@ -22,10 +22,10 @@ router.get('/', isAuth, async (req, res) => {
 router.post('/', isColumnist, async (req, res) => {
   try {
     let { name } = req.body
-    let categorie = await Categories.create({
+    let category = await Categories.create({
       name: name
     })
-    res.status(200).json(categorie)
+    res.status(200).json(category)
   } catch (error) {
     res.status(500).json(error)
   }
